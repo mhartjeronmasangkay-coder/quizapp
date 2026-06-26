@@ -1,0 +1,179 @@
+* { margin: 0; padding: 0; box-sizing: border-box; }
+
+.admin-page {
+  display: flex;
+  min-height: 100vh;
+  background: #0a0f1e;
+  color: white;
+  font-family: 'Segoe UI', sans-serif;
+}
+
+/* SIDEBAR */
+.sidebar {
+  width: 250px;
+  background: rgba(255,255,255,0.05);
+  border-right: 1px solid rgba(255,255,255,0.1);
+  display: flex;
+  flex-direction: column;
+  padding: 2rem 1rem;
+  position: fixed;
+  height: 100vh;
+}
+
+.sidebar-logo {
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+  margin-bottom: 2.5rem;
+  padding: 0 0.5rem;
+}
+
+.sidebar-logo span { font-size: 2rem; }
+
+.sidebar-logo h2 {
+  font-size: 1.3rem;
+  font-weight: 800;
+  background: linear-gradient(135deg, #38bdf8, #818cf8);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+}
+
+.sidebar-nav {
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+  flex: 1;
+}
+
+.nav-item {
+  padding: 0.85rem 1rem;
+  border-radius: 12px;
+  cursor: pointer;
+  color: rgba(255,255,255,0.6);
+  font-size: 0.95rem;
+  font-weight: 500;
+  transition: all 0.3s;
+  text-decoration: none;
+  display: block;
+}
+
+.nav-item:hover {
+  background: rgba(255,255,255,0.08);
+  color: white;
+}
+
+.nav-item.active {
+  background: linear-gradient(135deg, rgba(56,189,248,0.2), rgba(129,140,248,0.2));
+  color: #38bdf8;
+  border: 1px solid rgba(56,189,248,0.3);
+}
+
+.logout-btn {
+  padding: 0.85rem 1rem;
+  border-radius: 12px;
+  border: 1px solid rgba(255,100,100,0.3);
+  background: rgba(255,100,100,0.1);
+  color: #f87171;
+  cursor: pointer;
+  font-size: 0.95rem;
+  font-weight: 600;
+  transition: all 0.3s;
+  text-align: left;
+}
+
+.logout-btn:hover {
+  background: rgba(255,100,100,0.2);
+}
+
+/* MAIN CONTENT */
+.main-content {
+  margin-left: 250px;
+  padding: 2rem;
+  flex: 1;
+}
+
+.page-title {
+  font-size: 2rem;
+  font-weight: 800;
+  margin-bottom: 0.25rem;
+}
+
+.page-sub {
+  color: rgba(255,255,255,0.5);
+  margin-bottom: 2rem;
+}
+
+/* STATS GRID */
+.stats-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+  gap: 1.5rem;
+  margin-bottom: 2.5rem;
+}
+
+.stat-card {
+  border-radius: 16px;
+  padding: 1.5rem;
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+  border: 1px solid rgba(255,255,255,0.1);
+}
+
+.stat-card.blue { background: rgba(56,189,248,0.1); border-color: rgba(56,189,248,0.3); }
+.stat-card.green { background: rgba(52,211,153,0.1); border-color: rgba(52,211,153,0.3); }
+.stat-card.purple { background: rgba(129,140,248,0.1); border-color: rgba(129,140,248,0.3); }
+
+.stat-icon { font-size: 2.5rem; }
+
+.stat-info h3 {
+  font-size: 2rem;
+  font-weight: 800;
+  color: white;
+}
+
+.stat-info p {
+  color: rgba(255,255,255,0.5);
+  font-size: 0.9rem;
+}
+
+/* SECTION */
+.section { margin-top: 2rem; }
+
+.section-title {
+  font-size: 1.3rem;
+  font-weight: 700;
+  margin-bottom: 1rem;
+  color: white;
+}
+
+/* TABLE */
+.students-table {
+  width: 100%;
+  border-collapse: collapse;
+  background: rgba(255,255,255,0.04);
+  border-radius: 16px;
+  overflow: hidden;
+  border: 1px solid rgba(255,255,255,0.1);
+}
+
+.students-table th {
+  background: rgba(255,255,255,0.08);
+  padding: 1rem 1.25rem;
+  text-align: left;
+  font-size: 0.85rem;
+  color: rgba(255,255,255,0.5);
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+}
+
+.students-table td {
+  padding: 1rem 1.25rem;
+  border-top: 1px solid rgba(255,255,255,0.06);
+  color: rgba(255,255,255,0.85);
+  font-size: 0.95rem;
+}
+
+.students-table tr:hover td {
+  background: rgba(255,255,255,0.04);
+}

@@ -1,0 +1,48 @@
+<div class="page">
+  <div class="card">
+
+    <div class="logo-container">
+      <img src="logo.png" alt="BCP Logo" class="logo" />
+    </div>
+
+    <h1 class="title">BCP Quiz System</h1>
+    <h2 class="subtitle">Student Login</h2>
+
+    <div *ngIf="errorMessage" class="alert error">{{ errorMessage }}</div>
+    <div *ngIf="successMessage" class="alert success">{{ successMessage }}</div>
+
+    <div class="form-group">
+      <label>Username</label>
+      <input
+        type="text"
+        [(ngModel)]="username"
+        placeholder="Enter your username"
+        class="input"
+      />
+    </div>
+
+    <div class="form-group">
+      <label>Password</label>
+      <input
+        type="password"
+        [(ngModel)]="password"
+        placeholder="Enter your password"
+        class="input"
+      />
+    </div>
+
+    <button
+      class="btn"
+      (click)="onLogin()"
+      [disabled]="!username || !password || isLoading"
+    >
+      {{ isLoading ? 'Logging in...' : 'Login' }}
+    </button>
+
+    <p class="switch-text">
+      No account yet?
+      <a routerLink="/register" class="link">Register here</a>
+    </p>
+
+  </div>
+</div>

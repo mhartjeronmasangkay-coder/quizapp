@@ -1,0 +1,52 @@
+<div class="page">
+  <div class="card">
+    <h1 class="title">BCP Quiz System</h1>
+    <h2 class="subtitle">Create Account</h2>
+
+    <div *ngIf="errorMessage" class="alert error">{{ errorMessage }}</div>
+    <div *ngIf="successMessage" class="alert success">{{ successMessage }}</div>
+
+    <div class="form-group">
+      <label>Full Name</label>
+      <input
+        type="text"
+        [(ngModel)]="name"
+        placeholder="Enter your full name"
+        class="input"
+      />
+    </div>
+
+    <div class="form-group">
+      <label>Username (must be at least 6 characters)</label>
+      <input
+        type="text"
+        [(ngModel)]="username"
+        placeholder="Choose a username"
+        class="input"
+      />
+    </div>
+
+    <div class="form-group">
+      <label>Password        (must be at least 6 characters)</label>
+      <input
+        type="password"
+        [(ngModel)]="password"
+        placeholder="Choose a password"
+        class="input"
+      />
+    </div>
+
+    <button
+      class="btn"
+      (click)="onRegister()"
+      [disabled]="!name || !username || !password || isLoading"
+    >
+      {{ isLoading ? 'Registering...' : 'Register' }}
+    </button>
+
+    <p class="switch-text">
+      Already have an account?
+      <a routerLink="/login" class="link">Login here</a>
+    </p>
+  </div>
+</div>

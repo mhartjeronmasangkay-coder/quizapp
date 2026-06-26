@@ -1,0 +1,227 @@
+<div class="dashboard">
+
+  <!-- SIDEBAR -->
+  <aside class="sidebar">
+    <div class="sidebar-brand">
+      <span class="brand-icon">📝</span>
+      <span class="brand-name">BCP Quiz</span>
+    </div>
+
+    <nav class="sidebar-nav">
+      <button class="nav-item" [class.active]="activePage === 'home'"
+        (click)="setActivePage('home')">
+        <span class="nav-icon">🏠</span>
+        <span class="nav-label">Home</span>
+      </button>
+
+     <button class="nav-item" [class.active]="activePage === 'subjects'"
+         (click)="goToSubjects()">
+         <span class="nav-icon">📚</span>
+         <span class="nav-label">Subjects</span>
+      </button>
+
+      <button class="nav-item" [class.active]="activePage === 'leaderboard'"
+        (click)="setActivePage('leaderboard')">
+        <span class="nav-icon">🏆</span>
+        <span class="nav-label">Leaderboard</span>
+      </button>
+
+      <button class="nav-item" [class.active]="activePage === 'profile'"
+        (click)="setActivePage('profile')">
+        <span class="nav-icon">👤</span>
+        <span class="nav-label">Profile</span>
+      </button>
+
+      <button class="nav-item" [class.active]="activePage === 'settings'"
+        (click)="setActivePage('settings')">
+        <span class="nav-icon">⚙️</span>
+        <span class="nav-label">Settings</span>
+      </button>
+    </nav>
+
+    <button class="logout-btn" (click)="logout()">
+      <span>🚪</span>
+      <span>Logout</span>
+    </button>
+  </aside>
+
+  <!-- MAIN CONTENT -->
+  <main class="main">
+
+    <!-- TOP BAR -->
+    <div class="topbar">
+      <div class="topbar-title">
+        <h1 *ngIf="activePage === 'home'">Dashboard</h1>
+        <h1 *ngIf="activePage === 'subjects'">Subjects</h1>
+        <h1 *ngIf="activePage === 'leaderboard'">Leaderboard</h1>
+        <h1 *ngIf="activePage === 'profile'">Profile</h1>
+        <h1 *ngIf="activePage === 'settings'">Settings</h1>
+      </div>
+      <div class="topbar-user">
+        <span class="user-avatar">{{ user?.name?.charAt(0) }}</span>
+        <span class="user-name">{{ user?.name }}</span>
+      </div>
+    </div>
+
+    <!-- HOME PAGE -->
+    <div *ngIf="activePage === 'home'" class="page-content">
+
+      <div class="welcome-banner">
+        <div>
+          <h2>Welcome back, {{ user?.name }}! 👋</h2>
+          <p>Ready to continue your learning journey?</p>
+        </div>
+        <button class="start-btn">🚀 Start Quiz</button>
+      </div>
+
+      <!-- STAT CARDS -->
+      <div class="stats-grid">
+        <div class="stat-card blue">
+          <div class="stat-icon">📝</div>
+          <div class="stat-info">
+            <span class="stat-value">{{ stats.totalQuizzes }}</span>
+            <span class="stat-label">Total Quizzes</span>
+          </div>
+        </div>
+
+        <div class="stat-card green">
+          <div class="stat-icon">⭐</div>
+          <div class="stat-info">
+            <span class="stat-value">{{ stats.averageScore }}%</span>
+            <span class="stat-label">Average Score</span>
+          </div>
+        </div>
+
+        <div class="stat-card purple">
+          <div class="stat-icon">📚</div>
+          <div class="stat-info">
+            <span class="stat-value">{{ stats.subjectsCompleted }}</span>
+            <span class="stat-label">Subjects</span>
+          </div>
+        </div>
+
+        <div class="stat-card orange">
+          <div class="stat-icon">🔥</div>
+          <div class="stat-info">
+            <span class="stat-value">{{ stats.streakDays }}</span>
+            <span class="stat-label">Day Streak</span>
+          </div>
+        </div>
+
+        <div class="stat-card teal">
+          <div class="stat-icon">🏅</div>
+          <div class="stat-info">
+            <span class="stat-value">{{ stats.badgesEarned }}</span>
+            <span class="stat-label">Badges</span>
+          </div>
+        </div>
+
+        <div class="stat-card pink">
+          <div class="stat-icon">📊</div>
+          <div class="stat-info">
+            <span class="stat-value">{{ stats.scorePercentage }}%</span>
+            <span class="stat-label">Score Rate</span>
+          </div>
+        </div>
+      </div>
+
+      <!-- RECENT ACTIVITY -->
+      <div class="section">
+        <h3 class="section-title">Recent Activity</h3>
+        <div class="activity-list">
+          <div class="activity-item" *ngFor="let activity of recentActivities">
+            <span class="activity-icon">{{ activity.icon }}</span>
+            <div class="activity-info">
+              <span class="activity-subject">{{ activity.subject }}</span>
+              <span class="activity-date">{{ activity.date }}</span>
+            </div>
+            <span class="activity-score" [class.high]="activity.score >= 85"
+              [class.mid]="activity.score >= 70 && activity.score < 85"
+              [class.low]="activity.score < 70">
+              {{ activity.score }}%
+            </span>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- SUBJECTS PAGE -->
+    <div *ngIf="activePage === 'subjects'" class="page-content">
+      <div class="subjects-grid">
+        <div class="subject-card" *ngFor="let subject of subjects"
+          [style.border-color]="subject.color">
+          <div class="subject-icon">{{ subject.icon }}</div>
+          <h3 class="subject-name">{{ subject.name }}</h3>
+          <div class="subject-stats">
+            <span>{{ subject.quizzes }} Quizzes</span>
+            <span class="subject-score">Avg: {{ subject.avgScore }}%</span>
+          </div>
+          <button class="subject-btn" [style.background]="subject.color">
+            Start Quiz
+          </button>
+        </div>
+      </div>
+    </div>
+
+    <!-- LEADERBOARD PAGE -->
+    <div *ngIf="activePage === 'leaderboard'" class="page-content">
+      <div class="leaderboard-table">
+        <div class="leaderboard-header">
+          <span>Rank</span>
+          <span>Student</span>
+          <span>Score</span>
+        </div>
+        <div class="leaderboard-row" *ngFor="let entry of leaderboard"
+          [class.highlight]="entry.name === 'You'">
+          <span class="rank">{{ entry.badge || entry.rank }}</span>
+          <span class="student-name">{{ entry.name }}</span>
+          <span class="score">{{ entry.score }}%</span>
+        </div>
+      </div>
+    </div>
+
+    <!-- PROFILE PAGE -->
+    <div *ngIf="activePage === 'profile'" class="page-content">
+      <div class="profile-card">
+        <div class="profile-avatar">{{ user?.name?.charAt(0) }}</div>
+        <h2 class="profile-name">{{ user?.name }}</h2>
+        <p class="profile-role">{{ user?.role | titlecase }}</p>
+        <div class="profile-stats">
+          <div class="profile-stat">
+            <span class="profile-stat-value">{{ stats.totalQuizzes }}</span>
+            <span class="profile-stat-label">Quizzes</span>
+          </div>
+          <div class="profile-stat">
+            <span class="profile-stat-value">{{ stats.averageScore }}%</span>
+            <span class="profile-stat-label">Avg Score</span>
+          </div>
+          <div class="profile-stat">
+            <span class="profile-stat-value">{{ stats.badgesEarned }}</span>
+            <span class="profile-stat-label">Badges</span>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- SETTINGS PAGE -->
+    <div *ngIf="activePage === 'settings'" class="page-content">
+      <div class="settings-card">
+        <h3>Account Settings</h3>
+        <div class="setting-item">
+          <span>Name</span>
+          <span>{{ user?.name }}</span>
+        </div>
+        <div class="setting-item">
+          <span>Username</span>
+          <span>{{ user?.username }}</span>
+        </div>
+        <div class="setting-item">
+          <span>Role</span>
+          <span>{{ user?.role | titlecase }}</span>
+        </div>
+        <button class="danger-btn" (click)="logout()">Logout Account</button>
+      </div>
+    </div>
+
+  </main>
+</div>
