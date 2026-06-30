@@ -1,15 +1,73 @@
 <div class="subjects-container">
   <div class="page-header">
-    <h1>📖 Subjects</h1>
-    <p>Select a subject to explore quizzes</p>
+    <h1>Subjects</h1>
+    <p>Manage the subjects available in your quiz app</p>
   </div>
 
+  <!-- Add new subject -->
+  <div class="add-subject-section">
+    <input
+      type="text"
+      placeholder="Enter subject name..."
+      [(ngModel)]="newSubjectName"
+      (keyup.enter)="addSubject()"
+      class="subject-input"
+    />
+    <input
+      type="text"
+      placeholder="Description..."
+      [(ngModel)]="newSubjectDescription"
+      class="subject-input"
+    />
+    <button class="btn-add-subject" (click)="addSubject()">
+      <span class="btn-icon">+</span>
+      Add Subject
+    </button>
+  </div>
+
+  <!-- Subject grid -->
   <div class="subjects-grid">
     <div class="subject-card" *ngFor="let subject of subjects">
-      <div class="subject-icon">{{ subject.icon }}</div>
+      <div class="subject-icon">📘</div>
+   <div class="menu-container">
+  <button class="menu-btn" (click)="toggleMenu(subject.id)">⋮</button>
+  <div class="menu-dropdown" *ngIf="activeMenu === subject.id">
+    <button class="menu-item edit" (click)="startEdit(subject)">✏️ Edit</button>
+    <button class="menu-item delete" (click)="removeSubject(subject.id)">🗑️ Delete</button>
+  </div>
+</div>
       <h3>{{ subject.name }}</h3>
-      <p>{{ subject.description }}</p>
-      <button class="subject-btn">Explore →</button>
+      <p class="subject-description">{{ subject.description }}</p>
+      <button class="subject-btn" (click)="removeSubject(subject.id)">
+        Delete
+      </button>
+    </div>
+  </div>
+
+  <p *ngIf="subjects.length === 0" class="empty-state">
+    No subjects yet. Add one above!
+  </p>
+</div>
+
+<!-- Edit Modal -->
+<div class="modal-overlay" *ngIf="editingSubject" (click)="cancelEdit()">
+  <div class="modal-content" (click)="$event.stopPropagation()">
+    <h2>Edit Subject</h2>
+    <input
+      type="text"
+      [(ngModel)]="editingSubject.name"
+      placeholder="Subject name"
+      class="edit-input"
+    />
+    <input
+      type="text"
+      [(ngModel)]="editingSubject.description"
+      placeholder="Description"
+      class="edit-input"
+    />
+    <div class="modal-actions">
+      <button class="btn-save" (click)="saveEdit()">Save</button>
+      <button class="btn-cancel" (click)="cancelEdit()">Cancel</button>
     </div>
   </div>
 </div>
