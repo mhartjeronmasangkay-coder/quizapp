@@ -136,16 +136,16 @@ body {
   gap: 12px;
   padding: 16px 16px;
   margin: 0 12px;
-  background: rgba(0, 212, 255, 0.05);
+  background: rgba(1, 6, 43, 0.852);
   border-radius: 8px;
-  border: 1px solid rgba(0, 212, 255, 0.1);
+  border: 1px solid rgba(0, 213, 255, 0.597);
 }
 
 .user-avatar {
   width: 40px;
   height: 40px;
   border-radius: 50%;
-  background: linear-gradient(135deg, var(--primary), var(--secondary));
+  background-color: #050814;
   display: flex;
   align-items: center;
   justify-content: center;
@@ -159,9 +159,8 @@ body {
 }
 
 .user-name {
-  font-size: 14px;
+  font-size: 20px;
   font-weight: 600;
-  margin-bottom: 4px;
   white-space: nowrap;
   overflow: hidden;
   text-overflow: ellipsis;

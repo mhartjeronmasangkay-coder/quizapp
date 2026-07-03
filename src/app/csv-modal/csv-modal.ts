@@ -1,18 +1,8 @@
-import { Component, EventEmitter, Input, Output } from '@angular/core';
+import { Component, EventEmitter, Input, Output, ViewChild, ElementRef } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { HttpClient, HttpErrorResponse } from '@angular/common/http';
+import { SubjectService, ImportStatus } from '../services/subject'; // adjust path to match your actual file
 import { environment } from '../../environments/environment';
-
-interface ImportStatus {
-  status: 'queued' | 'processing' | 'completed' | 'not_found';
-  processed: number;
-  total: number;
-  errors: string[];
-}
-
-interface ImportResponse extends ImportStatus {
-  job_id: string;
-}
 
 @Component({
   selector: 'app-csv-modal',
@@ -25,6 +15,7 @@ export class CsvModalComponent {
   @Input() visible = false;
   @Output() closed = new EventEmitter<void>();
   @Output() importFinished = new EventEmitter<void>();
+  @ViewChild('fileInput') fileInput!: ElementRef<HTMLInputElement>;
 
   selectedFile: File | null = null;
   isUploading = false;
@@ -32,7 +23,10 @@ export class CsvModalComponent {
   errorMessage = '';
   private pollHandle: any = null;
 
-  constructor(private http: HttpClient) {}
+  constructor(
+    private http: HttpClient,
+    private subjectService: SubjectService
+  ) {}
 
   onFileSelected(event: Event) {
     const input = event.target as HTMLInputElement;
@@ -43,31 +37,42 @@ export class CsvModalComponent {
   uploadCsv() {
     if (!this.selectedFile) return;
 
-    const formData = new FormData();
-    formData.append('csv', this.selectedFile);
-
     this.isUploading = true;
     this.errorMessage = '';
 
-    this.http.post<ImportResponse>(`${environment.apiUrl}/subjects/import`, formData).subscribe({
-      next: (res) => {
+    this.subjectService.importSubjectsCsv(this.selectedFile).subscribe({
+      next: (result) => {
         this.isUploading = false;
-        this.importStatus = {
-          status: res.status,
-          processed: res.processed,
-          total: res.total,
-          errors: res.errors,
-        };
-
-        if (res.status === 'completed') {
-          this.importFinished.emit();
+        this.importStatus = result;
+        this.selectedFile = null;
+        if (this.fileInput) {
+          this.fileInput.nativeElement.value = '';
+        }
+        if (result.jobId) {
+          this.pollStatus(result.jobId);
         }
       },
-      error: (err: HttpErrorResponse) => {
+      error: (err) => {
         this.isUploading = false;
-        this.errorMessage = err.error?.message ?? 'Upload failed. Please try again.';
+        this.errorMessage = 'Upload failed. Please try again.';
+        console.error(err);
       }
     });
+  }
+
+  private pollStatus(jobId: string) {
+    this.pollHandle = setInterval(() => {
+      this.subjectService.getImportStatus(jobId).subscribe({
+        next: (status) => {
+          this.importStatus = status;
+          if (status.status === 'completed') {
+            clearInterval(this.pollHandle);
+            this.importFinished.emit();
+          }
+        },
+        error: () => clearInterval(this.pollHandle)
+      });
+    }, 1500);
   }
 
   exportCsv() {
@@ -90,6 +95,7 @@ export class CsvModalComponent {
   close() {
     if (this.pollHandle) clearInterval(this.pollHandle);
     this.selectedFile = null;
+    if (this.fileInput) this.fileInput.nativeElement.value = '';
     this.importStatus = null;
     this.errorMessage = '';
     this.closed.emit();

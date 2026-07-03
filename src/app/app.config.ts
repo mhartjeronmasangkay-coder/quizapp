@@ -1,9 +1,10 @@
 import { ApplicationConfig, inject } from '@angular/core';
 import { provideRouter } from '@angular/router';
 import { provideHttpClient, withInterceptors } from '@angular/common/http';
-import { InMemoryCache } from '@apollo/client/core';
+import { InMemoryCache, ApolloLink } from '@apollo/client/core';
+import { setContext } from '@apollo/client/link/context';
 import { provideApollo } from 'apollo-angular';
-import { HttpLink } from 'apollo-angular/http';
+import  UploadHttpLink  from 'apollo-upload-client/UploadHttpLink.mjs';
 import { routes } from './app.routes';
 import { authInterceptor } from './interceptors/auth.interceptor';
 
@@ -12,17 +13,24 @@ export const appConfig: ApplicationConfig = {
     provideRouter(routes),
     provideHttpClient(withInterceptors([authInterceptor])),
     provideApollo(() => {
-      const httpLink = inject(HttpLink);
-      
-      // Determine GraphQL endpoint based on environment
       let graphqlUrl = 'http://localhost:8000/graphql';
       if (typeof window !== 'undefined' && window.location.hostname !== 'localhost' && window.location.hostname !== '127.0.0.1') {
-        // In Docker containers, use the nginx service name
         graphqlUrl = 'http://nginx/graphql';
       }
-      
+     const uploadLink = new UploadHttpLink({ uri: graphqlUrl }) as unknown as ApolloLink;
+
+      const authLink = setContext((_, { headers }) => {
+        const token = sessionStorage.getItem('auth_token');
+        return {
+          headers: {
+            ...headers,
+            ...(token ? { Authorization: `Bearer ${token}` } : {}),
+          },
+        };
+      });
+
       return {
-        link: httpLink.create({ uri: graphqlUrl }),
+        link: authLink.concat(uploadLink),
         cache: new InMemoryCache(),
       };
     }),

@@ -3,9 +3,10 @@
     <h2 class="modal-title">Import & Export Subjects</h2>
     <button class="modal-close" (click)="close()">&times;</button>
 
-    <!-- Upload -->
     <p class="hint">CSV format: <code>name,description</code> (first row is header)</p>
-    <input type="file" (change)="onFileSelected($event)" accept=".csv">
+
+    <input type="file" #fileInput (change)="onFileSelected($event)" accept=".csv">
+
     <button (click)="uploadCsv()" [disabled]="!selectedFile || isUploading">
       {{ isUploading ? 'Uploading...' : 'Upload CSV' }}
     </button>
@@ -28,7 +29,6 @@
 
     <hr>
 
-    <!-- Export -->
     <button (click)="exportCsv()">Export Subjects</button>
   </div>
 </div>
