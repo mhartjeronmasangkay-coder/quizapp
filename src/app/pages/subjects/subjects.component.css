@@ -21,14 +21,12 @@
 
 .page-header h1 {
   font-size: 2.75rem; /* 44px */
-  font-weight: 800;
+  font-weight: 700;
   font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Roboto', sans-serif;
   margin-bottom: 12px;
-  background: linear-gradient(135deg, var(--primary), var(--secondary));
-  -webkit-background-clip: text;
-  -webkit-text-fill-color: transparent;
   background-clip: text;
-  letter-spacing: -0.8px;
+  letter-spacing: 1px;
+  color: aliceblue;
 }
 
 .page-header p {
@@ -223,7 +221,7 @@
   .add-subject-section {
     flex-direction: column;
     gap: 12px;
-    margin-bottom: 40px;
+    margin-bottom: 10px;
     padding: 24px;
   }
 
@@ -454,4 +452,58 @@
   background: rgba(0, 212, 255, 0.1);
   color: var(--text-light);
   border: 1px solid rgba(0, 212, 255, 0.2);
+}
+
+.Subject-title {
+  font-size: 2.75rem; /* 44px */
+  font-weight: 800;
+  font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Roboto', sans-serif;
+  margin-bottom: 12px;
+  background: linear-gradient(135deg, var(--primary), var(--secondary));
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+  letter-spacing: -0.8px;
+  color: aliceblue;
+}
+
+.CSV-btn{
+  font-size: 20px;
+  color: #ffffff;
+  padding: 10px 20px;
+  border: none;
+  border-radius: 8px;
+  cursor: pointer;
+  font-weight: 600;
+  margin-bottom: 20px;
+  background: linear-gradient(135deg, rgba(0, 212, 255, 0.08), rgba(102, 126, 234, 0.08));
+  border: 1px solid rgba(0, 212, 255, 0.15);
+}
+
+.CSV-btn:hover:not(:disabled) {
+  transform: translateY(-2px);
+  box-shadow: 0 8px 20px rgba(7, 171, 221, 0.192);
+}
+
+.btn-delete-all {
+  padding: 12px 24px;
+  background: linear-gradient(135deg, #ef4444, #dc2626);
+  border: none;
+  border-radius: 10px;
+  color: white;
+  font-weight: 600;
+  cursor: pointer;
+  margin-left: 12px;
+  transition: all 0.3s ease;
+  font-size: 20px;
+}
+
+.btn-delete-all:hover:not(:disabled) {
+  transform: translateY(-2px);
+  box-shadow: 0 8px 20px rgba(239, 68, 68, 0.35);
+}
+
+.btn-delete-all:disabled {
+  opacity: 0.4;
+  cursor: not-allowed;
 }

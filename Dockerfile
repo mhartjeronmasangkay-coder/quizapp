@@ -1,29 +1,13 @@
-# Stage 1 - Build the Angular app
-FROM node:22-alpine AS builder
+FROM node:22-alpine
 
 WORKDIR /app
 
-# Copy package files first (faster builds)
 COPY package*.json ./
-
-# Install dependencies
 RUN npm install
 
-# Copy all Angular files
 COPY . .
 
-# Build for production
-RUN npm run build --configuration=production
+EXPOSE 4200
 
-# Stage 2 - Serve with Nginx
-FROM nginx:alpine
-
-# Copy built files to Nginx
-COPY --from=builder /app/dist/quizapp/browser /usr/share/nginx/html
-
-# Copy custom Nginx config
-COPY nginx.conf /etc/nginx/conf.d/default.conf
-
-EXPOSE 80
-
-CMD ["nginx", "-g", "daemon off;"]
+# Runs the dev server, listens to all network interfaces, and polls for file changes
+CMD ["npx", "ng", "serve", "--host", "0.0.0.0", "--poll", "2000"]

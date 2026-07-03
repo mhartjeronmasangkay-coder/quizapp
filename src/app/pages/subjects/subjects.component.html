@@ -1,10 +1,15 @@
 <div class="subjects-container">
+  <app-csv-modal
+    [visible]="showCsvModal"
+    (closed)="showCsvModal = false"
+    (importFinished)="loadSubjects(true); showCsvModal = false">
+  </app-csv-modal>
+
   <div class="page-header">
     <h1>Subjects</h1>
     <p>Manage the subjects available in your quiz app</p>
   </div>
 
-  <!-- Add new subject -->
   <div class="add-subject-section">
     <input
       type="text"
@@ -25,49 +30,55 @@
     </button>
   </div>
 
-  <!-- Subject grid -->
-  <div class="subjects-grid">
+  <button class="CSV-btn" (click)="showCsvModal = true">📄 Import/Export CSV</button>
+<button
+  class="btn-delete-all"
+  (click)="deleteAllSubjects()"
+  [disabled]="subjects.length === 0">
+   Delete All
+</button>
+
+  <div class="subjects-grid" *ngIf="subjects.length > 0">
     <div class="subject-card" *ngFor="let subject of subjects">
       <div class="subject-icon">📘</div>
-   <div class="menu-container">
-  <button class="menu-btn" (click)="toggleMenu(subject.id)">⋮</button>
-  <div class="menu-dropdown" *ngIf="activeMenu === subject.id">
-    <button class="menu-item edit" (click)="startEdit(subject)">✏️ Edit</button>
-    <button class="menu-item delete" (click)="removeSubject(subject.id)">🗑️ Delete</button>
-  </div>
-</div>
+
+      <div class="menu-container">
+        <button class="menu-btn" (click)="toggleMenu(subject.id)">⋮</button>
+        <div class="menu-dropdown" *ngIf="activeMenu === subject.id">
+          <button class="menu-item edit" (click)="startEdit(subject)">✏️ Edit</button>
+          <button class="menu-item delete" (click)="removeSubject(subject.id)">🗑️ Delete</button>
+        </div>
+      </div>
+
       <h3>{{ subject.name }}</h3>
       <p class="subject-description">{{ subject.description }}</p>
-      <button class="subject-btn" (click)="removeSubject(subject.id)">
-        Delete
-      </button>
     </div>
   </div>
 
-  <p *ngIf="subjects.length === 0" class="empty-state">
+  <div class="empty-state" *ngIf="subjects.length === 0">
     No subjects yet. Add one above!
-  </p>
-</div>
+  </div>
 
-<!-- Edit Modal -->
-<div class="modal-overlay" *ngIf="editingSubject" (click)="cancelEdit()">
-  <div class="modal-content" (click)="$event.stopPropagation()">
-    <h2>Edit Subject</h2>
-    <input
-      type="text"
-      [(ngModel)]="editingSubject.name"
-      placeholder="Subject name"
-      class="edit-input"
-    />
-    <input
-      type="text"
-      [(ngModel)]="editingSubject.description"
-      placeholder="Description"
-      class="edit-input"
-    />
-    <div class="modal-actions">
-      <button class="btn-save" (click)="saveEdit()">Save</button>
-      <button class="btn-cancel" (click)="cancelEdit()">Cancel</button>
+  <div class="modal-overlay" *ngIf="editingSubject" (click)="cancelEdit()">
+    <div class="modal-content" (click)="$event.stopPropagation()">
+      <h2>Edit Subject</h2>
+      <input
+        type="text"
+        [(ngModel)]="editingSubject.name"
+        placeholder="Subject name"
+        class="edit-input"
+      />
+      <input
+        type="text"
+        [(ngModel)]="editingSubject.description"
+        placeholder="Description"
+        class="edit-input"
+      />
+      <div class="modal-actions">
+        <button class="btn-save" (click)="saveEdit()">Save</button>
+        <button class="btn-cancel" (click)="cancelEdit()">Cancel</button>
+      </div>
     </div>
   </div>
 </div>
+

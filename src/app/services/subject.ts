@@ -3,12 +3,45 @@ import { Apollo, gql } from 'apollo-angular';
 import { Observable } from 'rxjs';
 import { map } from 'rxjs/operators';
 
+
 export interface Subject {
   id: string;
   name: string;
   description: string;
   is_published: boolean;
 }
+
+export interface ImportStatus {
+  jobId: string | null;
+  status: 'queued' | 'processing' | 'completed' | 'not_found';
+  processed: number;
+  total: number;
+  errors: string[];
+}
+
+const IMPORT_SUBJECTS_CSV = gql`
+  mutation ImportSubjectsCsv($file: Upload!) {
+    importSubjectsCsv(file: $file) {
+      jobId
+      status
+      processed
+      total
+      errors
+    }
+  }
+`;
+
+const IMPORT_STATUS = gql`
+  query ImportStatus($jobId: String!) {
+    importStatus(jobId: $jobId) {
+      jobId
+      status
+      processed
+      total
+      errors
+    }
+  }
+`;
 
 const GET_SUBJECTS = gql`
   query {
@@ -59,13 +92,16 @@ export class SubjectService {
 
   constructor(private apollo: Apollo) {}
 
-  getSubjects(): Observable<Subject[]> {
-    return this.apollo
-      .watchQuery<{ subjects: Subject[] }>({ query: GET_SUBJECTS })
-      .valueChanges.pipe(
-        map(result => (result.data?.subjects ?? []) as Subject[])
-      );
-  }
+ getSubjects(forceRefresh = false): Observable<Subject[]> {
+  return this.apollo
+    .watchQuery<{ subjects: Subject[] }>({
+      query: GET_SUBJECTS,
+      fetchPolicy: forceRefresh ? 'network-only' : 'cache-and-network',
+      notifyOnNetworkStatusChange: true,
+    })
+    .valueChanges
+    .pipe(map(result => (result.data?.subjects ?? []) as Subject[]));
+}
 
   createSubject(name: string, description: string, is_published: boolean = true): Observable<Subject> {
     return this.apollo
@@ -104,4 +140,24 @@ export class SubjectService {
       })
       .pipe(map(result => result.data!.deleteSubject));
   }
+  importSubjectsCsv(file: File): Observable<ImportStatus> {
+  return this.apollo
+    .mutate<{ importSubjectsCsv: ImportStatus }>({
+      mutation: IMPORT_SUBJECTS_CSV,
+      variables: { file },
+      context: { useMultipart: true },
+    })
+    .pipe(map(result => result.data!.importSubjectsCsv));
+}
+
+getImportStatus(jobId: string): Observable<ImportStatus> {
+  return this.apollo
+    .query<{ importStatus: ImportStatus }>({
+      query: IMPORT_STATUS,
+      variables: { jobId },
+      fetchPolicy: 'network-only',
+    })
+    .pipe(map(result => result.data!.importStatus));
+}
+
 }

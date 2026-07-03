@@ -1,0 +1,34 @@
+<div class="csv-modal-overlay" *ngIf="visible" (click)="close()">
+  <div class="csv-modal-container" (click)="$event.stopPropagation()">
+    <h2 class="modal-title">Import & Export Subjects</h2>
+    <button class="modal-close" (click)="close()">&times;</button>
+
+    <p class="hint">CSV format: <code>name,description</code> (first row is header)</p>
+
+    <input type="file" #fileInput (change)="onFileSelected($event)" accept=".csv">
+
+    <button (click)="uploadCsv()" [disabled]="!selectedFile || isUploading">
+      {{ isUploading ? 'Uploading...' : 'Upload CSV' }}
+    </button>
+
+    <div class="progress-block" *ngIf="importStatus">
+      <div *ngIf="importStatus.status !== 'completed'">
+        Status: {{ importStatus.status }}
+        <span *ngIf="importStatus.total > 0">({{ importStatus.processed }}/{{ importStatus.total }})</span>
+      </div>
+      <div class="progress-bar" *ngIf="importStatus.total > 0">
+        <div class="progress-fill" [style.width.%]="(importStatus.processed / importStatus.total) * 100"></div>
+      </div>
+      <div *ngIf="importStatus.status === 'completed'" class="success-msg">
+        ✔ Imported {{ importStatus.processed }} subject(s).
+        <span *ngIf="importStatus.errors.length" class="error-count">{{ importStatus.errors.length }} row(s) failed.</span>
+      </div>
+    </div>
+
+    <div class="error-msg" *ngIf="errorMessage">{{ errorMessage }}</div>
+
+    <hr>
+
+    <button (click)="exportCsv()">Export Subjects</button>
+  </div>
+</div>

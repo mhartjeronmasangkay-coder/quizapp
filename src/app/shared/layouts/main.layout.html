@@ -8,43 +8,43 @@
       <h2 *ngIf="sidebarOpen">Quiz App</h2>
     </div>
 
-    <nav class="nav-menu">
-      <button 
-        class="nav-item" 
-        [class.active]="activeMenu === 'dashboard'"
-        (click)="navigateTo('dashboard', '/dashboard')">
+     <nav class="nav-menu">
+      <button
+        class="nav-item"
+        routerLink="/dashboard"
+        routerLinkActive="active">
         <span class="icon">🏠</span>
         <span *ngIf="sidebarOpen">Dashboard</span>
       </button>
 
-      <button 
-        class="nav-item" 
-        [class.active]="activeMenu === 'subjects'"
-        (click)="navigateTo('subjects', '/subjects')">
+      <button
+        class="nav-item"
+        routerLink="/subjects"
+        routerLinkActive="active">
         <span class="icon">📖</span>
         <span *ngIf="sidebarOpen">Subjects</span>
       </button>
 
-      <button 
-        class="nav-item" 
-        [class.active]="activeMenu === 'quizzes'"
-        (click)="navigateTo('quizzes', '/quizzes')">
+      <button
+        class="nav-item"
+        routerLink="/quizzes"
+        routerLinkActive="active">
         <span class="icon">✏️</span>
         <span *ngIf="sidebarOpen">My Quizzes</span>
       </button>
 
-      <button 
-        class="nav-item" 
-        [class.active]="activeMenu === 'results'"
-        (click)="navigateTo('results', '/results')">
+      <button
+        class="nav-item"
+        routerLink="/results"
+        routerLinkActive="active">
         <span class="icon">📊</span>
         <span *ngIf="sidebarOpen">Results</span>
       </button>
 
-      <button 
-        class="nav-item" 
-        [class.active]="activeMenu === 'profile'"
-        (click)="navigateTo('profile', '/profile/edit')">
+      <button
+        class="nav-item"
+        routerLink="/profile/edit"
+        routerLinkActive="active">
         <span class="icon">👤</span>
         <span *ngIf="sidebarOpen">Profile</span>
       </button>
