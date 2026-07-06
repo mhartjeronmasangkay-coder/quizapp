@@ -1,6 +1,7 @@
 import { Component, OnInit, ChangeDetectorRef } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
+import { RouterLink } from '@angular/router';
 import { SubjectService, Subject } from '../../services/subject';
 import { HttpClient } from '@angular/common/http';
 import { CsvModalComponent } from '../../csv-modal/csv-modal';
@@ -8,10 +9,12 @@ import { forkJoin, of } from 'rxjs';
 import { catchError } from 'rxjs/operators';
 
 
+
+
 @Component({
   selector: 'app-subjects',
   standalone: true,
-  imports: [CommonModule, FormsModule, CsvModalComponent],
+  imports: [CommonModule, FormsModule, CsvModalComponent, RouterLink],
   templateUrl: './subjects.component.html',
   styleUrl: './subjects.component.css'
 })

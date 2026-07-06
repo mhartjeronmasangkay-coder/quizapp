@@ -14,7 +14,12 @@
           <span class="duration">⏱️ {{ quiz.duration }}</span>
         </div>
       </div>
-      <button class="start-btn">Start Quiz</button>
+      <div class="quiz-actions">
+        <button class="start-btn">Start Quiz</button>
+        <button class="pdf-btn" (click)="generateQuizPDF(quiz)" [disabled]="generatingPdfId === quiz.id">
+          {{ generatingPdfId === quiz.id ? 'Generating...' : '📄 PDF' }}
+        </button>
+      </div>
     </div>
   </div>
 </div>

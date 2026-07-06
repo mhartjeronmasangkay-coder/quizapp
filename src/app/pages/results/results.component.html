@@ -30,6 +30,9 @@
         <div class="score-value">{{ result.score }}/{{ result.total }}</div>
         <div class="score-percentage">{{ (result.score / result.total * 100) | number: '1.0-0' }}%</div>
       </div>
+      <button class="pdf-btn" (click)="generateResultPDF(result)" [disabled]="generatingPdfId === result.quiz">
+        {{ generatingPdfId === result.quiz ? 'Generating...' : '📄 Download' }}
+      </button>
     </div>
   </div>
 </div>

@@ -83,6 +83,7 @@
   display: flex;
   justify-content: space-between;
   align-items: center;
+  gap: 12px;
   background: linear-gradient(135deg, rgba(15, 23, 41, 0.8), rgba(5, 8, 20, 0.8));
   backdrop-filter: blur(10px);
   border: 1px solid rgba(0, 212, 255, 0.1);
@@ -90,6 +91,7 @@
   padding: 16px 20px;
   margin-bottom: 12px;
   transition: all 0.3s ease;
+  flex-wrap: wrap;
 }
 
 .result-item:hover {
@@ -167,6 +169,32 @@
   color: #fecaca;
 }
 
+.pdf-btn {
+  padding: 8px 16px;
+  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+  border: none;
+  border-radius: 8px;
+  color: white;
+  font-size: 13px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  white-space: nowrap;
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+}
+
+.pdf-btn:hover:not(:disabled) {
+  transform: translateY(-2px);
+  box-shadow: 0 6px 12px rgba(102, 126, 234, 0.4);
+}
+
+.pdf-btn:disabled {
+  opacity: 0.6;
+  cursor: not-allowed;
+}
+
 @media (max-width: 768px) {
   .result-item {
     flex-direction: column;
@@ -175,5 +203,11 @@
 
   .result-score {
     align-self: flex-end;
+    width: 100%;
+  }
+
+  .pdf-btn {
+    width: 100%;
+    justify-content: center;
   }
 }

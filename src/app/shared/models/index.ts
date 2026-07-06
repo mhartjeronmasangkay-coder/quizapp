@@ -45,32 +45,13 @@ export interface Subject {
   is_published: boolean;
   created_at: string;
   updated_at: string;
-  subSubjects?: SubSubject[];
+  questionGroups?: QuestionGroup[];
 }
 
-export interface SubSubject {
+export interface QuestionGroup {
   id: number;
   subject_id: number;
   name: string;
-  description: string;
-  order?: number;
-  is_locked: boolean;
-  level_required?: number;
-  created_at: string;
-  updated_at: string;
-  levels?: Level[];
-}
-
-export interface Level {
-  id: number;
-  sub_subject_id: number;
-  name: string;
-  level_number: number;
-  difficulty: 'easy' | 'medium' | 'hard';
-  is_locked: boolean;
-  total_questions: number;
-  passing_score: number;
-  time_limit_seconds?: number;
   created_at: string;
   updated_at: string;
   questions?: Question[];
@@ -78,14 +59,8 @@ export interface Level {
 
 export interface Question {
   id: number;
-  level_id: number;
+  question_group_id: number;
   question_text: string;
-  question_type: 'multiple_choice' | 'true_false' | 'short_answer';
-  difficulty: 'easy' | 'medium' | 'hard';
-  points: number;
-  explanation: string;
-  order: number;
-  is_published: boolean;
   created_at: string;
   updated_at: string;
   answers?: Answer[];
@@ -97,7 +72,6 @@ export interface Answer {
   answer_text: string;
   is_correct: boolean;
   order: number;
-  explanation: string;
   created_at: string;
   updated_at: string;
 }
@@ -105,7 +79,7 @@ export interface Answer {
 export interface QuizAttempt {
   id: number;
   user_id: number;
-  level_id: number;
+  question_group_id: number;
   started_at: string;
   submitted_at?: string;
   time_spent_seconds: number;
@@ -203,13 +177,14 @@ export interface CreateSubjectForm {
   color: string;
 }
 
+export interface CreateQuestionGroupForm {
+  subject_id: number;
+  name: string;
+}
+
 export interface CreateQuestionForm {
-  level_id: number;
+  question_group_id: number;
   question_text: string;
-  difficulty: 'easy' | 'medium' | 'hard';
-  question_type: 'multiple_choice' | 'true_false' | 'short_answer';
-  points: number;
-  explanation: string;
   answers: CreateAnswerForm[];
 }
 
@@ -217,7 +192,16 @@ export interface CreateAnswerForm {
   answer_text: string;
   is_correct: boolean;
   order: number;
-  explanation: string;
+}
+
+// ========== IMPORT MODELS ==========
+
+export interface ImportStatus {
+  jobId: string | null;
+  status: string;
+  processed: number;
+  total: number;
+  errors: string[];
 }
 
 // ========== ERROR HANDLING ==========

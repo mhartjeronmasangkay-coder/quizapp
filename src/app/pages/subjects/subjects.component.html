@@ -4,12 +4,10 @@
     (closed)="showCsvModal = false"
     (importFinished)="loadSubjects(true); showCsvModal = false">
   </app-csv-modal>
-
   <div class="page-header">
     <h1>Subjects</h1>
     <p>Manage the subjects available in your quiz app</p>
   </div>
-
   <div class="add-subject-section">
     <input
       type="text"
@@ -29,7 +27,6 @@
       Add Subject
     </button>
   </div>
-
   <button class="CSV-btn" (click)="showCsvModal = true">📄 Import/Export CSV</button>
 <button
   class="btn-delete-all"
@@ -37,28 +34,28 @@
   [disabled]="subjects.length === 0">
    Delete All
 </button>
-
   <div class="subjects-grid" *ngIf="subjects.length > 0">
-    <div class="subject-card" *ngFor="let subject of subjects">
+    <div
+      class="subject-card"
+      *ngFor="let subject of subjects"
+      [routerLink]="['/subjects', subject.id, 'questions']"
+      style="cursor: pointer;"
+    >
       <div class="subject-icon">📘</div>
-
-      <div class="menu-container">
+      <div class="menu-container" (click)="$event.stopPropagation()">
         <button class="menu-btn" (click)="toggleMenu(subject.id)">⋮</button>
         <div class="menu-dropdown" *ngIf="activeMenu === subject.id">
           <button class="menu-item edit" (click)="startEdit(subject)">✏️ Edit</button>
           <button class="menu-item delete" (click)="removeSubject(subject.id)">🗑️ Delete</button>
         </div>
       </div>
-
       <h3>{{ subject.name }}</h3>
       <p class="subject-description">{{ subject.description }}</p>
     </div>
   </div>
-
   <div class="empty-state" *ngIf="subjects.length === 0">
     No subjects yet. Add one above!
   </div>
-
   <div class="modal-overlay" *ngIf="editingSubject" (click)="cancelEdit()">
     <div class="modal-content" (click)="$event.stopPropagation()">
       <h2>Edit Subject</h2>
@@ -81,4 +78,3 @@
     </div>
   </div>
 </div>
-

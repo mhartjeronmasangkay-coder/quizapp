@@ -1,0 +1,139 @@
+<div class="questions-page">
+  <h1>Manage Questions</h1>
+
+  <!-- Create new folder -->
+    <div class="new-group-form">
+    <input
+      type="text"
+      [(ngModel)]="newGroupName"
+      placeholder="New folder name (e.g. Chapter 1)"
+    />
+    <button class="action-btn" (click)="createGroup()">📁 Create Folder</button>
+  </div>
+
+  <!-- Folders -->
+  <div *ngFor="let group of questionGroups" class="group-card">
+    <div class="group-header">
+      <h2>{{ group.name }}</h2>
+      <div class="group-actions">
+        <button class="action-btn" (click)="openQuestionForm(group.id)">
+          {{ activeGroupId === group.id ? '✕ Cancel' : '+ Add Question' }}
+        </button>
+        <button class="action-btn" (click)="openCsvModal(group.id)">📥 Import CSV</button>
+        <button class="pdf-btn" (click)="generatePDF(group.id, group.name)" [disabled]="generatingPdf">
+          {{ generatingPdf && currentGroupId === group.id ? '⏳ Generating...' : '📄 Generate PDF' }}
+        </button>
+        <button class="action-btn danger-btn" (click)="deleteGroup(group.id)">🗑 Delete Folder</button>
+      </div>
+    </div>
+
+    <!-- Inline question creation form -->
+    <div *ngIf="activeGroupId === group.id" class="question-form">
+      <textarea
+        [(ngModel)]="newQuestionText"
+        placeholder="Question text"
+        rows="2"
+      ></textarea>
+
+      <div *ngFor="let answer of newAnswers; let i = index" class="answer-row">
+        <input
+          type="radio"
+          name="correctAnswer"
+          [checked]="answer.is_correct"
+          (change)="setCorrect(i)"
+        />
+        <input
+          type="text"
+          [(ngModel)]="answer.answer_text"
+          placeholder="Option {{ i + 1 }}"
+        />
+      </div>
+
+      <div *ngIf="errorMessage" class="error">{{ errorMessage }}</div>
+
+      <button (click)="submitQuestion(group.id)">Save Question</button>
+    </div>
+
+    <!-- Existing questions -->
+    <ul class="question-list">
+      <li *ngFor="let question of group.questions" class="question-item">
+
+        <!-- Edit form (shown instead of the static view when editing this question) -->
+        <div *ngIf="editingQuestionId === question.id; else viewQuestion" class="question-form">
+          <textarea
+            [(ngModel)]="editQuestionText"
+            placeholder="Question text"
+            rows="2"
+          ></textarea>
+
+          <div *ngFor="let answer of editAnswers; let i = index" class="answer-row">
+            <input
+              type="radio"
+              name="editCorrectAnswer-{{ question.id }}"
+              [checked]="answer.is_correct"
+              (change)="setEditCorrect(i)"
+            />
+            <input
+              type="text"
+              [(ngModel)]="answer.answer_text"
+              placeholder="Option {{ i + 1 }}"
+            />
+          </div>
+
+          <div *ngIf="editErrorMessage" class="error">{{ editErrorMessage }}</div>
+
+          <button (click)="submitEditQuestion(question.id)">💾 Save Changes</button>
+          <button class="action-btn" (click)="cancelEditQuestion()">✕ Cancel</button>
+        </div>
+
+        <!-- Static view -->
+        <ng-template #viewQuestion>
+          <div class="question-text">{{ question.question_text }}</div>
+          <ul class="answers-list">
+            <li *ngFor="let answer of question.answers" [class.correct]="answer.is_correct">
+              {{ answer.answer_text }}
+              <span *ngIf="answer.is_correct" class="correct-badge">✓ correct</span>
+            </li>
+          </ul>
+          <button class="action-btn small" (click)="startEditQuestion(question)">✏️ Edit</button>
+          <button class="danger small" (click)="deleteQuestion(question.id)">Delete</button>
+        </ng-template>
+
+      </li>
+    </ul>
+
+    <p *ngIf="!group.questions?.length" class="empty-hint">No questions yet in this folder.</p>
+  </div>
+
+  <p *ngIf="!questionGroups.length" class="empty-hint">
+    No folders yet. Create one above to start adding questions.
+  </p>
+</div>
+
+<app-question-csv-modal
+  [visible]="showCsvModal"
+  [questionGroupId]="csvTargetGroupId!"
+  (closed)="onCsvClosed()"
+  (importFinished)="onCsvImportFinished()"
+></app-question-csv-modal>
+
+<!-- PDF Preview Modal -->
+<div class="modal-overlay" *ngIf="showPdfPreview" (click)="closePdfPreview()">
+  <div class="pdf-modal-content" (click)="$event.stopPropagation()">
+    <div class="pdf-modal-header">
+      <h2>{{ pdfGroupName }} — PDF Preview</h2>
+      <button class="close-btn" (click)="closePdfPreview()">&times;</button>
+    </div>
+
+    <iframe
+      *ngIf="pdfPreviewUrl"
+      [src]="pdfPreviewUrl"
+      class="pdf-iframe"
+    ></iframe>
+
+    <div class="pdf-modal-actions">
+      <button class="action-btn" (click)="downloadPreviewedPdf()">⬇ Download PDF</button>
+      <button class="action-btn" (click)="closePdfPreview()">Close</button>
+    </div>
+  </div>
+</div>

@@ -1,0 +1,65 @@
+<div class="csv-modal-overlay" *ngIf="visible">
+  <div class="csv-modal-container">
+    <button class="modal-close" (click)="close()">&times;</button>
+
+    <h2 class="modal-title">Import Questions from CSV</h2>
+
+    <!-- Format hint + sample download -->
+    <div class="hint-box">
+      <p>
+        <strong>Required columns (in order):</strong><br>
+        <code>question_text, option_a, option_b, option_c, option_d, correct_option</code><br>
+        <span class="hint-note"><code>correct_option</code> must be <code>a</code>, <code>b</code>, <code>c</code>, or <code>d</code>.</span>
+      </p>
+      <button class="sample-btn" type="button" (click)="downloadSample()">⬇ Download Sample CSV</button>
+    </div>
+
+    <!-- File picker -->
+    <div class="file-area">
+      <input #fileInput type="file" accept=".csv" (change)="onFileSelected($event)" />
+      <span *ngIf="selectedFile" class="file-name">📄 {{ selectedFile.name }}</span>
+    </div>
+
+    <!-- Upload button -->
+    <button
+      class="upload-btn"
+      type="button"
+      (click)="uploadCsv()"
+      [disabled]="!selectedFile || isUploading">
+      {{ isUploading ? '⏳ Uploading...' : '⬆ Upload & Import' }}
+    </button>
+
+    <!-- Error message -->
+    <div *ngIf="errorMessage" class="import-error">
+      ❌ {{ errorMessage }}
+    </div>
+
+    <!-- Status / progress -->
+    <div *ngIf="importStatus" class="import-status"
+         [class.status-done]="importStatus.status === 'completed'"
+         [class.status-processing]="importStatus.status === 'processing'"
+         [class.status-queued]="importStatus.status === 'queued'">
+
+      <p class="status-label">
+        <ng-container [ngSwitch]="importStatus.status">
+          <span *ngSwitchCase="'queued'">⏳ Queued — waiting to process...</span>
+          <span *ngSwitchCase="'processing'">🔄 Processing questions...</span>
+          <span *ngSwitchCase="'completed'">✅ Import complete! Closing shortly...</span>
+          <span *ngSwitchDefault>{{ importStatus.status }}</span>
+        </ng-container>
+      </p>
+
+      <ng-container *ngIf="importStatus.total > 0">
+        <p class="progress-label">{{ importStatus.processed }} / {{ importStatus.total }} questions</p>
+        <div class="progress-bar">
+          <div class="progress-fill" [style.width.%]="progressPercent"></div>
+        </div>
+      </ng-container>
+
+      <ul *ngIf="importStatus.errors.length" class="row-errors">
+        <li *ngFor="let err of importStatus.errors">⚠ {{ err }}</li>
+      </ul>
+    </div>
+
+  </div>
+</div>
